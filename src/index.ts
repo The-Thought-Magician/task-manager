@@ -87,6 +87,15 @@ app.put('/api/tasks/:id', async (req, res) => {
     res.json(updatedTask);
 });
 
+app.delete('/api/tasks/:id', async (req, res) => {
+    const { id } = req.params;
+    const deleted = await client.hDel('tasks', id);
+    if (!deleted) {
+        return res.status(404).json({ error: 'Task not found' });
+    }
+    res.status(204).send();
+});
+
 // Static file serving - make sure this comes after API routes
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
